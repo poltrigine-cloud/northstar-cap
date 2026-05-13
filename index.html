@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NØRTHSTAR — STEALTH CAP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black:  #0d0b0a;
+      --white:  #ffffff;
+      --silver: #c8c8c8;
+      --muted:  rgba(255,255,255,0.45);
+      --f-display: 'Space Grotesk', sans-serif;
+      --f-body:    'Inter', sans-serif;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--f-body);
+      overflow-x: hidden;
+    }
+
+    /* ── PROGRESS BAR ───────────────────────────────────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.35);
+      z-index: 300;
+      width: 0%;
+      pointer-events: none;
+    }
+
+    /* ── CANVAS ─────────────────────────────────────────────────────────────── */
+    #cap-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 1;
+      pointer-events: auto;
+      cursor: grab;
+    }
+    #cap-canvas:active { cursor: grabbing; }
+
+    /* ── LOADING SCREEN ─────────────────────────────────────────────────────── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      transition: opacity 0.8s var(--ease);
+    }
+    #loader.hidden { opacity: 0; pointer-events: none; }
+
+    .loader-logo {
+      font-family: var(--f-display);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #fff;
+    }
+
+    .loader-bar-track {
+      width: 160px;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+    .loader-bar-fill {
+      height: 1px;
+      background: rgba(255,255,255,0.7);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .loader-text {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── NAV ────────────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 28px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    .nav-logo {
+      font-family: var(--f-display);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+    }
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    .nav-cta {
+      font-family: var(--f-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.5);
+      padding: 9px 22px;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: #fff; color: #000; }
+
+    /* ── SCROLL CONTAINER ───────────────────────────────────────────────────── */
+    .scroll-container {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .scroll-container section { pointer-events: auto; }
+
+    /* ── SECTIONS BASE ──────────────────────────────────────────────────────── */
+    section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 48px;
+      position: relative;
+    }
+
+    /* ── HERO ───────────────────────────────────────────────────────────────── */
+    .hero {
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 72px;
+    }
+    .hero-content { max-width: 560px; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--silver);
+      border: 1px solid rgba(200,200,200,0.25);
+      padding: 5px 14px;
+      margin-bottom: 28px;
+    }
+    .badge-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--silver);
+    }
+
+    .hero h1 {
+      font-family: var(--f-display);
+      font-size: clamp(72px, 11vw, 152px);
+      font-weight: 700;
+      line-height: 0.88;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+
+    .hero-sub {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 44px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--f-display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 15px 36px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .hero-cta:hover { background: var(--silver); }
+    .hero-cta svg { width: 14px; height: 14px; }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 48px;
+      right: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .scroll-hint span {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      writing-mode: vertical-rl;
+    }
+    .scroll-hint .sh-line {
+      width: 1px;
+      height: 48px;
+      background: rgba(255,255,255,0.18);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.2; transform: scaleY(0.4); transform-origin: top; }
+      50%       { opacity: 0.9; transform: scaleY(1); }
+    }
+
+    /* ── INFO SECTIONS ──────────────────────────────────────────────────────── */
+    .info-left  .text-block { margin-right: auto; }
+    .info-right .text-block { margin-left: auto; }
+    .text-block { max-width: 420px; }
+
+    .section-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 22px;
+    }
+
+    .text-block h2 {
+      font-family: var(--f-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+      margin-bottom: 22px;
+    }
+
+    .text-block p {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--muted);
+      max-width: 380px;
+    }
+
+    /* ── SPECS SECTION ──────────────────────────────────────────────────────── */
+    .specs-section {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0;
+    }
+    .specs-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 56px;
+    }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+      width: 100%;
+      max-width: 880px;
+    }
+    .spec-cell {
+      background: var(--black);
+      padding: 52px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .spec-value {
+      font-family: var(--f-display);
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .spec-name {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── CTA SECTION ────────────────────────────────────────────────────────── */
+    .cta-section {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0;
+    }
+    .cta-section h2 {
+      font-family: var(--f-display);
+      font-size: clamp(52px, 9vw, 128px);
+      font-weight: 700;
+      line-height: 0.88;
+      letter-spacing: -0.03em;
+      margin-bottom: 52px;
+    }
+    .cta-btn {
+      font-family: var(--f-display);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 18px 52px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 18px;
+    }
+    .cta-btn:hover { background: var(--silver); }
+    .cta-note {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── FOOTER ─────────────────────────────────────────────────────────────── */
+    footer {
+      min-height: auto;
+      padding: 52px 48px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: auto;
+    }
+    .footer-logo {
+      font-family: var(--f-display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+    .footer-tagline {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+    .footer-copy {
+      font-size: 10px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── FADE-IN ANIMATIONS ─────────────────────────────────────────────────── */
+    .fi {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    .fi.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+    }
+    .fi.d1 { transition-delay: 0.12s; }
+    .fi.d2 { transition-delay: 0.26s; }
+    .fi.d3 { transition-delay: 0.42s; }
+
+    /* ── FEATURE TAGS ──────────────────────────────────────────────────────── */
+    .feature-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+    .feature-tags span {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.38);
+      border: 1px solid rgba(255,255,255,0.1); padding: 5px 13px;
+    }
+
+    /* ── COLOR STUDIO ───────────────────────────────────────────────────────── */
+    .color-studio { min-height: 100vh; display: flex; align-items: center; padding: 80px 48px; }
+    .cs-inner { max-width: 500px; }
+    .color-selector { display: flex; flex-direction: column; gap: 2px; margin-top: 40px; }
+    .color-option {
+      display: flex; align-items: center; gap: 20px; padding: 20px 24px;
+      border: 1px solid rgba(255,255,255,0.07); cursor: pointer;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .color-option:hover:not(.color-locked) { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.03); }
+    .color-active  { border-color: rgba(255,255,255,0.32) !important; background: rgba(255,255,255,0.04); }
+    .color-locked  { opacity: 0.38; cursor: not-allowed; }
+    .color-dot     { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; }
+    .color-title   { font-family: var(--f-display); font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .color-avail   { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    .color-check   { margin-left: auto; font-size: 11px; color: rgba(255,255,255,0.65); }
+    .color-lock    { margin-left: auto; font-size: 13px; color: rgba(255,255,255,0.18); }
+
+    /* ── SPECS ROW-BASED ────────────────────────────────────────────────────── */
+    .specs-full { width: 100%; max-width: 680px; margin-top: 40px; }
+    .spec-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 24px;
+    }
+    .spec-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+    .spec-row.highlight .spec-val { color: rgba(255,255,255,0.9); font-weight: 600; }
+    .spec-key { font-size: 10px; font-weight: 600; letter-spacing: 0.17em; text-transform: uppercase; color: rgba(255,255,255,0.3); flex-shrink: 0; min-width: 150px; }
+    .spec-val { font-size: 13px; color: rgba(255,255,255,0.7); text-align: right; }
+    .cta-pre { font-size: 10px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--silver); margin-bottom: 28px; }
+    .cta-price { font-family: var(--f-display); font-size: clamp(48px, 6vw, 80px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 36px; }
+
+    /* ── BRAND SECTION (after 3D scroll) ────────────────────────────────────── */
+    .brand-section { position: relative; z-index: 2; background: #0c0a09; color: var(--white); }
+
+    .brand-intro {
+      max-width: 1200px; margin: 0 auto; padding: 140px 64px 80px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+    .brand-tagline { font-family: var(--f-display); font-size: clamp(34px, 3.8vw, 54px); font-weight: 700; line-height: 1.06; letter-spacing: -0.025em; }
+    .brand-story p { font-size: 15px; line-height: 1.9; color: rgba(255,255,255,0.5); margin-bottom: 20px; max-width: 460px; }
+
+    .editorial-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 540px 380px; gap: 3px;
+    }
+    .editorial-item { overflow: hidden; position: relative; }
+    .editorial-item img, .editorial-item video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); display: block; }
+    .editorial-item:hover img, .editorial-item:hover video { transform: scale(1.04); }
+    .ei-tall { grid-row: span 2; }
+
+    .photo-placeholder {
+      width: 100%; height: 100%; background: rgba(255,255,255,0.025);
+      border: 1px dashed rgba(255,255,255,0.08);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    }
+    .photo-placeholder span { font-size: 9px; letter-spacing: 0.22em; color: rgba(255,255,255,0.18); text-transform: uppercase; }
+    .photo-placeholder small { font-size: 8px; letter-spacing: 0.15em; color: rgba(255,255,255,0.1); text-transform: uppercase; }
+
+    .brand-values {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+      background: rgba(255,255,255,0.04); margin-top: 3px;
+    }
+    .brand-value { padding: 60px 48px; background: #0c0a09; }
+    .bv-num { font-size: 11px; font-weight: 700; letter-spacing: 0.28em; color: rgba(255,255,255,0.18); margin-bottom: 22px; font-family: var(--f-display); }
+    .bv-title { font-family: var(--f-display); font-size: 20px; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+    .bv-text { font-size: 14px; line-height: 1.75; color: rgba(255,255,255,0.42); }
+
+    .media-section { max-width: 1200px; margin: 0 auto; padding: 100px 64px; }
+    .media-header { display: flex; align-items: center; gap: 18px; margin-bottom: 44px; }
+    .media-handle { font-family: var(--f-display); font-size: 20px; font-weight: 700; letter-spacing: 0.04em; }
+    .media-sep { color: rgba(255,255,255,0.18); font-size: 16px; }
+    .media-tagline { font-size: 13px; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; }
+    .media-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin-bottom: 36px; }
+    .media-item { aspect-ratio: 1; overflow: hidden; }
+    .media-placeholder { background: rgba(255,255,255,0.025); border: 1px dashed rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: center; }
+    .media-ph-text { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.13); }
+    .ig-link { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-decoration: none; transition: color 0.2s; }
+    .ig-link:hover { color: var(--white); }
+
+    .brand-footer { border-top: 1px solid rgba(255,255,255,0.07); padding: 52px 64px; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .bf-logo { font-family: var(--f-display); font-size: 14px; font-weight: 700; letter-spacing: 0.12em; }
+    .bf-links { display: flex; gap: 32px; }
+    .bf-links a { font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+    .bf-links a:hover { color: var(--white); }
+    .bf-copy { font-size: 10px; color: rgba(255,255,255,0.18); }
+
+    /* ── MOBILE ─────────────────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links, .nav-cta { display: none; }
+      section { padding: 60px 24px; }
+      .hero h1 { font-size: 60px; }
+      .scroll-hint { display: none; }
+      .info-right .text-block { margin-left: 0; }
+      .color-studio { padding: 60px 24px; }
+      .spec-key { min-width: 110px; }
+      .brand-intro { grid-template-columns: 1fr; padding: 80px 24px 60px; gap: 36px; }
+      .editorial-grid { grid-template-columns: 1fr; grid-auto-rows: 280px; }
+      .ei-tall { grid-row: span 1; }
+      .brand-values { grid-template-columns: 1fr; }
+      .brand-value { padding: 40px 24px; }
+      .media-grid { grid-template-columns: repeat(2, 1fr); }
+      .media-section { padding: 60px 24px; }
+      .brand-footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 24px; }
+      .bf-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading screen -->
+  <div id="loader">
+    <div class="loader-logo">NØRTHSTAR</div>
+    <div class="loader-bar-track"><div class="loader-bar-fill" id="loader-fill"></div></div>
+    <div class="loader-text" id="loader-text">Cargando modelo</div>
+  </div>
+
+  <div id="progress-bar"></div>
+  <canvas id="cap-canvas"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">NØRTHSTAR</a>
+    <div class="nav-links">
+      <a href="#section-patch">Emblema</a>
+      <a href="#section-back">La Firma</a>
+      <a href="#section-color">Color</a>
+      <a href="#brand-section">Historia</a>
+    </div>
+    <a href="#section-cta" class="nav-cta">Comprar · 49€</a>
+  </nav>
+
+  <!-- SCROLL CONTAINER — 3D cinematic -->
+  <div class="scroll-container">
+
+    <!-- 01 HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge fi">
+          <span class="badge-dot"></span>
+          Drop I · 2026 · Barcelona
+        </div>
+        <h1 class="fi d1">NØRTH<br>STAR</h1>
+        <p class="hero-sub fi d2">Stealth O1-Cap — Edición Limitada</p>
+        <p class="fi d2" style="font-size:13px;color:rgba(255,255,255,0.42);letter-spacing:0.06em;margin-bottom:36px;max-width:340px;line-height:1.7">Nació en Barcelona. Diseñada para los que saben a dónde van.</p>
+        <button class="hero-cta fi d3" onclick="document.getElementById('section-cta').scrollIntoView({behavior:'smooth'})">
+          Conseguir · 49€
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+        </button>
+      </div>
+      <div class="scroll-hint fi d3">
+        <span>Scroll</span>
+        <div class="sh-line"></div>
+      </div>
+    </section>
+
+    <!-- 02 EL EMBLEMA -->
+    <section class="info-left" id="section-patch">
+      <div class="text-block">
+        <span class="section-label fi">01 — El Emblema</span>
+        <h2 class="fi d1">El símbolo<br>que siempre<br>sabe dónde ir</h2>
+        <p class="fi d2">Antes de que existiera la gorra, existió el símbolo. Una rosa de los vientos reducida a su esencia: cuatro puntas, dos planos, una sola lectura. No hay manera de confundirla.</p>
+        <p class="fi d2" style="margin-top:16px">La bordamos a máquina, punto a punto, sobre una base de velcro negro de 4×4 cm. El resultado es un parche que no se despega, no se decolora y no pierde definición con el uso. Está en el panel lateral izquierdo porque ahí es donde se fija la mirada.</p>
+        <p class="fi d2" style="margin-top:16px">Lo hemos fotografiado en puertas de Barcelona, en rejas de hierro forjado, en el Passeig de Gràcia. Siempre queda bien. Eso es lo que hace un buen símbolo.</p>
+        <div class="feature-tags fi d3">
+          <span>Bordado máquina</span>
+          <span>Velcro backing 4×4 cm</span>
+          <span>Panel lateral izq.</span>
+          <span>Hilo blanco alta resistencia</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 LA FIRMA -->
+    <section class="info-right" id="section-back">
+      <div class="text-block">
+        <span class="section-label fi">02 — La Firma</span>
+        <h2 class="fi d1">Siete letras.<br>Sin excusas.<br>Para siempre.</h2>
+        <p class="fi d2">NØRTHSTAR. Lo bordamos en el panel trasero porque queremos que se vea cuando te vas. No cuando llegas.</p>
+        <p class="fi d2" style="margin-top:16px">Hilo de algodón mercerizado blanco roto, con un ligero relieve que hace que la luz lo trabaje a su favor. De cerca parece costura artesanal. Desde lejos parece una declaración. En ambos casos, tiene razón.</p>
+        <p class="fi d2" style="margin-top:16px">Llevamos meses viendo la gorra en el metro, en las ramblas, en Costa Brava, en París. Nadie pregunta qué es. Todo el mundo pregunta dónde conseguirla.</p>
+        <div class="feature-tags fi d3">
+          <span>Hilo blanco mercerizado</span>
+          <span>Panel trasero centrado</span>
+          <span>Relieve 3D</span>
+          <span>Permanente</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 EL METAL -->
+    <section class="info-left" id="section-clasp">
+      <div class="text-block">
+        <span class="section-label fi">03 — Hardware</span>
+        <h2 class="fi d1">Donde otros<br>ponen plástico,<br>nosotros ponemos metal.</h2>
+        <p class="fi d2">El cierre snapback es la parte que más se toca, la que más se ajusta, la que más castiga. Por eso lo hicimos en acero inoxidable. No en ABS. No en polipropileno. Metal.</p>
+        <p class="fi d2" style="margin-top:16px">Cinco posiciones. Cada una con un clic definido. Sin juego lateral, sin holgura. El ajuste que eliges se queda donde lo pones.</p>
+        <p class="fi d2" style="margin-top:16px">No es el detalle más visible de la gorra. Pero es el que notarás cada vez que te la pongas y cada vez que te la quites. Y cuando algo se nota sin verse, es que está bien hecho.</p>
+        <div class="feature-tags fi d3">
+          <span>Acero inoxidable</span>
+          <span>5 posiciones · Clic firme</span>
+          <span>Sin plástico</span>
+          <span>Cepillado mate</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 COLOR STUDIO -->
+    <section class="color-studio" id="section-color">
+      <div class="cs-inner">
+        <span class="section-label fi">04 — Color Studio</span>
+        <h2 class="fi d1">Elige tu<br>versión</h2>
+        <p class="fi d2" style="font-size:15px;line-height:1.8;color:rgba(255,255,255,0.5);margin-bottom:0">El color es una decisión de carácter. El Drop I llega en un único tono: Stealth Black. Más versiones en el Drop II.</p>
+
+        <div class="color-selector fi d3">
+          <div class="color-option color-active" data-color="stealth" onclick="setCapColor('stealth')">
+            <div class="color-dot" style="background:#0d0d0d;box-shadow:0 0 0 1px rgba(255,255,255,0.18)"></div>
+            <div>
+              <div class="color-title">Stealth Black</div>
+              <div class="color-avail">Disponible · Drop I · 49€</div>
+            </div>
+            <div class="color-check">✓ Seleccionado</div>
+          </div>
+
+          <div class="color-option color-locked" data-color="sand">
+            <div class="color-dot" style="background:#8b7355"></div>
+            <div>
+              <div class="color-title">Desert Sand</div>
+              <div class="color-avail">Drop II · Próximamente</div>
+            </div>
+            <div class="color-lock">—</div>
+          </div>
+
+          <div class="color-option color-locked" data-color="olive">
+            <div class="color-dot" style="background:#3b3d2e"></div>
+            <div>
+              <div class="color-title">Olive Dark</div>
+              <div class="color-avail">Drop II · Próximamente</div>
+            </div>
+            <div class="color-lock">—</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 ESPECIFICACIONES -->
+    <section class="specs-section" id="section-specs">
+      <p class="specs-label fi">05 — Especificaciones Técnicas</p>
+      <div class="specs-full fi d1">
+        <div class="spec-row"><span class="spec-key">Construcción</span><span class="spec-val">6 paneles · Costura estructurada</span></div>
+        <div class="spec-row"><span class="spec-key">Material</span><span class="spec-val">100% algodón peinado 320 g/m²</span></div>
+        <div class="spec-row"><span class="spec-key">Visera</span><span class="spec-val">Pre-curvada · Perfil medio</span></div>
+        <div class="spec-row"><span class="spec-key">Talla</span><span class="spec-val">Única · Ajustable 54–60 cm</span></div>
+        <div class="spec-row"><span class="spec-key">Emblema</span><span class="spec-val">Parche bordado · Base velcro · Panel izq.</span></div>
+        <div class="spec-row"><span class="spec-key">Firma trasera</span><span class="spec-val">Bordado hilo blanco · Panel posterior</span></div>
+        <div class="spec-row"><span class="spec-key">Cierre</span><span class="spec-val">Snapback acero inoxidable · 5 posiciones</span></div>
+        <div class="spec-row"><span class="spec-key">Interior</span><span class="spec-val">Cinta de confort en suede negro</span></div>
+        <div class="spec-row"><span class="spec-key">Lavado</span><span class="spec-val">A mano · 30 °C máximo · Sin secadora</span></div>
+        <div class="spec-row"><span class="spec-key">Origen</span><span class="spec-val">Diseñada en Barcelona · Fabricada en Europa</span></div>
+        <div class="spec-row highlight"><span class="spec-key">Edición</span><span class="spec-val">Drop I · 2026 · Stock limitado</span></div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-section" id="section-cta">
+      <p class="cta-pre fi">Drop I · Barcelona · 2026</p>
+      <h2 class="fi d1">Find Your<br>North</h2>
+      <div class="cta-price fi d1">49 €</div>
+      <button class="cta-btn fi d2">Conseguir la Gorra</button>
+      <p class="cta-note fi d3">Envío en 48h · Devolución gratuita · Pago seguro</p>
+    </section>
+
+    <footer>
+      <div class="footer-logo">NØRTHSTAR</div>
+      <div class="footer-tagline">Find Your North</div>
+      <div class="footer-copy">© 2026 NØRTHSTAR BCN</div>
+    </footer>
+
+  </div><!-- /scroll-container -->
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- BRAND SECTION — post-cinematic, real content                          -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="brand-section" id="brand-section">
+
+    <!-- Historia de marca -->
+    <div class="brand-intro">
+      <div class="brand-tagline">Nacidos en<br>Barcelona.<br>Guiados<br>por el norte.</div>
+      <div class="brand-story">
+        <p>NØRTHSTAR nació de una idea simple: hacer una gorra que valga la pena. No una más de las que se venden en cualquier tienda. Una que dure, que signifique algo, que lleves porque quieres — no porque te la dieron.</p>
+        <p>Somos una marca independiente de Barcelona. Pequeña por elección, cuidadosa por principio. Cada pieza del Drop I ha pasado por manos que saben exactamente lo que están haciendo.</p>
+        <p>La estrella de cuatro puntos no es un logo de temporada. Es una referencia permanente: la del norte magnético, la que orienta. La llevamos porque creemos que siempre hay una dirección correcta.</p>
+      </div>
+    </div>
+
+    <div class="editorial-grid">
+      <!-- col 1 — tall portrait spanning both rows -->
+      <div class="editorial-item ei-tall">
+        <img src="/assets/photos/editorial-01.jpg" alt="Double the style. One North — Barcelona" style="object-position: center top">
+      </div>
+      <!-- col 2 row 1 — Paris -->
+      <div class="editorial-item">
+        <img src="/assets/photos/editorial-04.jpg" alt="Weekend in Paris — NØRTHSTAR" style="object-position: top center">
+      </div>
+      <!-- col 3 row 1 — B&W portrait La Pedrera -->
+      <div class="editorial-item">
+        <img src="/assets/photos/editorial-02.jpg" alt="Diseñada en Barcelona — La Pedrera">
+      </div>
+      <!-- col 2 row 2 — golf cap Costa Brava -->
+      <div class="editorial-item">
+        <img src="/assets/photos/editorial-05.jpg" alt="Golf afternoon Costa Brava — NØRTHSTAR">
+      </div>
+      <!-- col 3 row 2 — patch detail -->
+      <div class="editorial-item">
+        <img src="/assets/photos/editorial-03.jpg" alt="El emblema — Designed in Barcelona">
+      </div>
+    </div>
+
+    <!-- Valores de marca -->
+    <div class="brand-values">
+      <div class="brand-value">
+        <div class="bv-num">001</div>
+        <div class="bv-title">Calidad antes que cantidad</div>
+        <div class="bv-text">Hacemos una gorra. La hacemos bien. Sin atajos, sin materiales baratos, sin excusas.</div>
+      </div>
+      <div class="brand-value">
+        <div class="bv-num">002</div>
+        <div class="bv-title">Drop culture</div>
+        <div class="bv-text">Colecciones limitadas. Sin reposición. Si lo quieres, tienes que decidirte. Así funciona lo que vale.</div>
+      </div>
+      <div class="brand-value">
+        <div class="bv-num">003</div>
+        <div class="bv-title">Hecho para durar</div>
+        <div class="bv-text">No diseñamos para la temporada. Diseñamos para los próximos diez años. La gorra que llevas el primer día es la misma que llevarás el último.</div>
+      </div>
+    </div>
+
+    <!-- Instagram / media feed -->
+    <div class="media-section">
+      <div class="media-header">
+        <span class="media-handle">@northstar.cap</span>
+        <span class="media-sep">—</span>
+        <span class="media-tagline">Comunidad · Drops · Behind the scenes</span>
+      </div>
+      <div class="media-grid">
+        <div class="media-item"><img src="/assets/photos/feed-01.jpg" alt="Double the style. One North." style="width:100%;height:100%;object-fit:cover"></div>
+        <div class="media-item"><img src="/assets/photos/feed-02.jpg" alt="Weekend in Paris" style="width:100%;height:100%;object-fit:cover"></div>
+        <div class="media-item"><img src="/assets/photos/feed-03.jpg" alt="Golf afternoon in Costa Brava" style="width:100%;height:100%;object-fit:cover"></div>
+        <div class="media-item"><img src="/assets/photos/feed-04.jpg" alt="Nørthstar Style" style="width:100%;height:100%;object-fit:cover"></div>
+      </div>
+      <a href="https://www.instagram.com/northstar.cap/" target="_blank" rel="noopener" class="ig-link">
+        Ver todo en Instagram →
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="brand-footer">
+      <div class="bf-logo">NØRTHSTAR</div>
+      <div class="bf-links">
+        <a href="https://www.instagram.com/northstar.cap/" target="_blank">Instagram</a>
+        <a href="mailto:hola@northstar.cap">Contacto</a>
+        <a href="#">Envíos</a>
+        <a href="#">Política de privacidad</a>
+      </div>
+      <div class="bf-copy">© 2026 NØRTHSTAR BCN. Todos los derechos reservados.</div>
+    </div>
+
+  </div><!-- /brand-section -->
+
+  <!-- THREE.JS importmap -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader }    from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader }   from 'three/addons/loaders/DRACOLoader.js';
+    import { RGBELoader }    from 'three/addons/loaders/RGBELoader.js';
+    import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // RENDERER
+    // ─────────────────────────────────────────────────────────────────────────
+    const canvas = document.getElementById('cap-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.78;
+    renderer.setClearColor(0x0d0b0a, 1);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type   = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = false;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SCENE + CAMERA
+    // ─────────────────────────────────────────────────────────────────────────
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 3);
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // LIGHTS
+    // ─────────────────────────────────────────────────────────────────────────
+    // Ambient — lift shadow side just enough to show fabric texture
+    scene.add(new THREE.AmbientLight(0xffffff, 0.18));
+
+    // Key light — principal, define las costuras y sombras del tejido
+    const keyLight = new THREE.DirectionalLight(0xfff8f0, 3.0);
+    keyLight.position.set(5, 10, 5);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(2048, 2048);
+    keyLight.shadow.camera.near = 0.5;
+    keyLight.shadow.camera.far  = 30;
+    keyLight.shadow.bias = -0.0005;
+    scene.add(keyLight);
+
+    // Fill — lado frío, levanta el detalle sin crear destellos
+    const fillLight = new THREE.DirectionalLight(0xbcccff, 0.65);
+    fillLight.position.set(-6, 1, 4);
+    scene.add(fillLight);
+
+    // Front soft — frontal muy suave para leer el bordado
+    const frontLight = new THREE.DirectionalLight(0xdce8ff, 0.30);
+    frontLight.position.set(0, -1, 8);
+    scene.add(frontLight);
+
+    // Rim — separación de silueta, controlado para no crear flash
+    const rimLight = new THREE.DirectionalLight(0xffffff, 3.8);
+    rimLight.position.set(0, 3, -7);
+    scene.add(rimLight);
+
+    // Underlight — rebote muy sutil desde abajo
+    const underLight = new THREE.DirectionalLight(0x7080a0, 0.28);
+    underLight.position.set(0, -5, 2);
+    scene.add(underLight);
+
+    // Clasp accent — activated in section 4 to reveal metal hardware
+    const claspLight = new THREE.PointLight(0xfff0d0, 0, 6);
+    claspLight.position.set(0.2, -0.6, 1.5);
+    scene.add(claspLight);
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // HDR ENVIRONMENT
+    // ─────────────────────────────────────────────────────────────────────────
+    new RGBELoader().load(
+      'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr',
+      (tex) => {
+        tex.mapping = THREE.EquirectangularReflectionMapping;
+        scene.environment = tex;
+        scene.environmentIntensity = 0.35;
+      }
+    );
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // MATERIALS
+    // ─────────────────────────────────────────────────────────────────────────
+    const fabricNormal = buildFabricNormal();
+    const fabricAlbedo = buildFabricAlbedo();
+
+    const fabricMat = new THREE.MeshPhysicalMaterial({
+      color: 0x181818,
+      map: fabricAlbedo,
+      roughness: 0.92,
+      metalness: 0.0,
+      normalMap: fabricNormal,
+      normalScale: new THREE.Vector2(1.4, 1.4),
+      sheen: 0.28,
+      sheenRoughness: 0.50,
+      sheenColor: new THREE.Color(0x484840),
+    });
+
+    const brimMat = new THREE.MeshPhysicalMaterial({
+      color: 0x181818,
+      map: fabricAlbedo,
+      roughness: 0.88,
+      metalness: 0.0,
+      normalMap: fabricNormal,
+      normalScale: new THREE.Vector2(0.9, 0.9),
+      sheen: 0.14,
+      sheenRoughness: 0.60,
+      sheenColor: new THREE.Color(0x383830),
+    });
+
+    const claspMat = new THREE.MeshPhysicalMaterial({
+      color: 0xc0c0c0,
+      roughness: 0.10,
+      metalness: 0.98,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.03,
+      reflectivity: 1.0,
+    });
+
+    const innerMat = new THREE.MeshStandardMaterial({
+      color: 0x111111,
+      roughness: 0.96,
+      metalness: 0.0,
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // FABRIC ALBEDO — color texture with diagonal twill weave baked in
+    // This makes the weave visible regardless of lighting angle.
+    // ─────────────────────────────────────────────────────────────────────────
+    function buildFabricAlbedo() {
+      const S = 512;
+      const c = document.createElement('canvas');
+      c.width = c.height = S;
+      const ctx = c.getContext('2d');
+
+      // Base fabric — warm deep black
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(0, 0, S, S);
+
+      const step = 9; // thread pitch
+
+      // Warp threads — primary diagonal direction (/)
+      for (let i = -S; i < S * 2; i += step) {
+        // Dark valley (thread crossing over)
+        ctx.strokeStyle = 'rgba(6,6,6,0.95)';
+        ctx.lineWidth = step * 0.52;
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i + S, S);
+        ctx.stroke();
+        // Lighter thread crest beside it
+        ctx.strokeStyle = 'rgba(26,26,24,0.90)';
+        ctx.lineWidth = step * 0.44;
+        ctx.beginPath();
+        ctx.moveTo(i + step * 0.55, 0);
+        ctx.lineTo(i + step * 0.55 + S, S);
+        ctx.stroke();
+      }
+
+      // Weft cross-threads — perpendicular micro-variation
+      for (let j = -S; j < S * 2; j += step * 2) {
+        ctx.strokeStyle = 'rgba(18,18,16,0.30)';
+        ctx.lineWidth = step * 0.20;
+        ctx.beginPath();
+        ctx.moveTo(0, j);
+        ctx.lineTo(S, j + S);
+        ctx.stroke();
+      }
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(16, 16);
+      return tex;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // FABRIC NORMAL MAP — diagonal twill weave (classic 6-panel cap structure)
+    // ─────────────────────────────────────────────────────────────────────────
+    function buildFabricNormal() {
+      const S = 256;
+      const c = document.createElement('canvas');
+      c.width = c.height = S;
+      const ctx = c.getContext('2d');
+      // Neutral normal direction: rgb(128,128,255)
+      ctx.fillStyle = 'rgb(128,128,255)';
+      ctx.fillRect(0, 0, S, S);
+      const step = 6;
+      // Warp threads — diagonal / direction
+      for (let i = -S; i < S * 2; i += step) {
+        const bright = Math.floor(i / step) % 2 === 0;
+        ctx.strokeStyle = bright ? 'rgba(155,155,255,0.55)' : 'rgba(98,98,255,0.50)';
+        ctx.lineWidth = step * 0.48;
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i + S, S);
+        ctx.stroke();
+      }
+      // Weft threads — slight horizontal variation
+      for (let y = 0; y < S; y += step) {
+        ctx.strokeStyle = 'rgba(115,115,255,0.22)';
+        ctx.lineWidth = step * 0.30;
+        ctx.beginPath();
+        ctx.moveTo(0, y + step * 0.5);
+        ctx.lineTo(S, y + step * 0.5);
+        ctx.stroke();
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(16, 16);
+      return tex;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PATCH TEXTURE — 4-blade compass star on black rectangular patch
+    // Matches the actual logo-patch.png design (split-blade 4-pointed star)
+    // Used as canvas fallback; real PNG is swapped in asynchronously below
+    // ─────────────────────────────────────────────────────────────────────────
+    function buildPatchTexture() {
+      const W = 512, H = 340;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, W, H);
+
+      // Black rectangular patch base (like the real velcro patch)
+      ctx.fillStyle = '#080808';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, W, H, 8);
+      ctx.fill();
+
+      // Stitching border
+      ctx.save();
+      ctx.strokeStyle = 'rgba(140,140,140,0.45)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 4]);
+      ctx.strokeRect(11, 11, W - 22, H - 22);
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // 4-blade split compass star
+      const cx = W / 2, cy = H / 2;
+      const outerR = 110, baseR = 22, bladeW = 17, gapH = 5;
+
+      for (let a = 0; a < 4; a++) {
+        const ang = (a * Math.PI / 2) - Math.PI / 2;
+        const cos = Math.cos(ang), sin = Math.sin(ang);
+        const pc  = Math.cos(ang + Math.PI / 2);
+        const ps  = Math.sin(ang + Math.PI / 2);
+        const tipX = cx + cos * outerR, tipY = cy + sin * outerR;
+
+        for (const side of [-1, 1]) {
+          const ix = cx + cos * baseR + pc * side * gapH;
+          const iy = cy + sin * baseR + ps * side * gapH;
+          const ox = cx + cos * baseR + pc * side * (gapH + bladeW);
+          const oy = cy + sin * baseR + ps * side * (gapH + bladeW);
+
+          ctx.beginPath();
+          ctx.moveTo(tipX, tipY);
+          ctx.lineTo(ix, iy);
+          ctx.lineTo(ox, oy);
+          ctx.closePath();
+
+          const grad = ctx.createLinearGradient(tipX, tipY, ox, oy);
+          grad.addColorStop(0,   'rgba(255,255,255,0.95)');
+          grad.addColorStop(0.3, 'rgba(200,200,200,0.9)');
+          grad.addColorStop(1,   'rgba(65,65,65,0.85)');
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // White highlight on the inner edge (facing the center gap)
+          ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(tipX, tipY);
+          ctx.lineTo(ix, iy);
+          ctx.stroke();
+        }
+      }
+
+      // Small center void
+      ctx.beginPath();
+      const cv = 14;
+      ctx.moveTo(cx, cy - cv); ctx.lineTo(cx + cv, cy);
+      ctx.lineTo(cx, cy + cv); ctx.lineTo(cx - cv, cy);
+      ctx.closePath();
+      ctx.fillStyle = '#030303';
+      ctx.fill();
+
+      return new THREE.CanvasTexture(c);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BACK TEXT TEXTURE — multi-layer embroidery simulation
+    // ─────────────────────────────────────────────────────────────────────────
+    function buildBackTexture() {
+      const W = 1024, H = 220;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const ctx = c.getContext('2d');
+
+      // Fondo transparente — el material usará alphaTest para no tapar la tela
+      ctx.clearRect(0, 0, W, H);
+
+      const text = 'NØRTHSTAR';
+      const cx = W / 2, cy = H / 2 + 10;
+
+      ctx.font = 'bold 102px "Space Grotesk", "Arial Black", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Sombra del hilo hundido en la tela
+      ctx.fillStyle = 'rgba(0,0,0,0.80)';
+      ctx.fillText(text, cx + 3, cy + 4);
+
+      // Lado oscuro del hilo levantado
+      ctx.fillStyle = 'rgba(55,53,47,0.95)';
+      ctx.fillText(text, cx + 1.5, cy + 2);
+
+      // Cuerpo del hilo — tono medio
+      ctx.fillStyle = 'rgba(190,188,178,1.0)';
+      ctx.fillText(text, cx + 0.5, cy + 0.5);
+
+      // Superficie principal del hilo — blanco roto
+      ctx.fillStyle = 'rgba(242,240,232,1.0)';
+      ctx.fillText(text, cx, cy);
+
+      // Brillo superior del hilo (arista superior, mira al key light)
+      ctx.fillStyle = 'rgba(255,255,255,0.50)';
+      ctx.fillText(text, cx - 0.5, cy - 1);
+
+      // Thread direction lines — source-atop: only paints on existing text pixels,
+      // leaving the transparent background untouched (prevents the rectangle artifact)
+      ctx.globalCompositeOperation = 'source-atop';
+      for (let y = 0; y < H; y += 3) {
+        const shade = y % 6 < 3 ? 170 : 210;
+        ctx.strokeStyle = `rgba(${shade},${shade},${Math.floor(shade*0.93)},0.65)`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, y + 1.5);
+        ctx.lineTo(W, y + 1.5);
+        ctx.stroke();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+
+      return new THREE.CanvasTexture(c);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // LABEL TEXTURE — inner sweatband tag
+    // ─────────────────────────────────────────────────────────────────────────
+    function buildLabelTexture() {
+      const W = 512, H = 256;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const ctx = c.getContext('2d');
+
+      // Label fabric
+      ctx.fillStyle = '#0c0c0c';
+      ctx.fillRect(0, 0, W, H);
+
+      // Stitching border
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([6, 5]);
+      ctx.strokeRect(14, 14, W - 28, H - 28);
+      ctx.setLineDash([]);
+
+      // Brand — embroidery style
+      ctx.font = 'bold 72px "Space Grotesk", "Arial Black", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(0,0,0,0.85)';
+      ctx.fillText('NØRTHSTAR', 258, 105);
+      ctx.fillStyle = 'rgba(235,233,225,0.95)';
+      ctx.fillText('NØRTHSTAR', 256, 103);
+
+      // Sub-line
+      ctx.font = '400 24px "Space Grotesk", Arial, sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.30)';
+      ctx.fillText('STEALTH CAP  ·  LIMITED EDITION', 256, 162);
+
+      // Small star dividers
+      ctx.fillStyle = 'rgba(255,255,255,0.28)';
+      [222, 256, 290].forEach(x => {
+        ctx.beginPath();
+        ctx.moveTo(x, 140); ctx.lineTo(x + 5, 146);
+        ctx.lineTo(x, 152); ctx.lineTo(x - 5, 146);
+        ctx.closePath(); ctx.fill();
+      });
+
+      return new THREE.CanvasTexture(c);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // MODEL LOADING
+    // ─────────────────────────────────────────────────────────────────────────
+    let cap = null;
+    let capBaseScale = 1;
+    let capLocalCenter = new THREE.Vector3();
+    let shadowDirtyFrames = 0;
+    let capFabricMaterials = [];
+
+    const loaderFill = document.getElementById('loader-fill');
+    const loaderText = document.getElementById('loader-text');
+    const loaderEl   = document.getElementById('loader');
+
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.setDRACOLoader(draco);
+
+    // Preload logo-patch.png and remove the gray photo background.
+    // The PNG (~100KB) loads well before the 4MB GLB, so the real texture
+    // is ready to swap in as soon as the decal material is created.
+    let patchMat          = null;
+    let preloadedPatchTex = null;
+    const _patchImg = new Image();
+    _patchImg.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = _patchImg.width; c.height = _patchImg.height;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(_patchImg, 0, 0);
+      const id = ctx.getImageData(0, 0, c.width, c.height);
+      const d  = id.data;
+      const bgR = d[0], bgG = d[1], bgB = d[2];
+      for (let i = 0; i < d.length; i += 4) {
+        const dist = Math.abs(d[i]-bgR) + Math.abs(d[i+1]-bgG) + Math.abs(d[i+2]-bgB);
+        if (dist < 70)       d[i+3] = 0;
+        else if (dist < 120) d[i+3] = Math.round((dist - 70) / 50 * 255);
+      }
+      ctx.putImageData(id, 0, 0);
+      preloadedPatchTex = new THREE.CanvasTexture(c);
+      preloadedPatchTex.colorSpace = THREE.SRGBColorSpace;
+      if (patchMat) { patchMat.map = preloadedPatchTex; patchMat.needsUpdate = true; }
+    };
+    _patchImg.src = '/assets/logo-patch.png';
+
+    gltfLoader.load(
+      '/assets/cap.glb',
+      (gltf) => {
+        cap = gltf.scene;
+
+        // Hide the first cap (Cap / Cap__0) — keep Cap_2 which has the correct
+        // orientation showing NØRTHSTAR on the back panel.
+        cap.traverse(ch => {
+          if (ch.name === 'Cap' || ch.name === 'Cap__0') ch.visible = false;
+        });
+
+        // Bounding box — compute BEFORE applying any transform
+        const box = new THREE.Box3().setFromObject(cap);
+        const size   = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        capBaseScale = 1.0 / maxDim;
+        capLocalCenter.copy(center);
+        console.log('[NØRTHSTAR] maxDim:', maxDim, '→ baseScale:', capBaseScale.toFixed(4), '| center:', center);
+
+        console.group('[NØRTHSTAR] Meshes:');
+        cap.traverse(ch => { if (ch.isMesh) console.log(`  "${ch.name}"`); });
+        console.groupEnd();
+
+        // Black fabric material — preserves original PBR maps
+        capFabricMaterials = [];
+        cap.traverse(ch => {
+          if (!ch.isMesh) return;
+          ch.castShadow    = true;
+          ch.receiveShadow = true;
+          const orig = Array.isArray(ch.material) ? ch.material[0] : ch.material;
+          ch.material = new THREE.MeshStandardMaterial({
+            color:           0x080808,
+            map:             orig.map          || null,
+            normalMap:       orig.normalMap    || fabricNormal,
+            normalScale:     orig.normalMap
+                               ? new THREE.Vector2(0.8, 0.8)
+                               : new THREE.Vector2(1.2, 1.2),
+            roughnessMap:    orig.roughnessMap || null,
+            roughness:       1.0,
+            metalness:       0.0,
+            envMapIntensity: 0.12,
+          });
+          capFabricMaterials.push(ch.material);
+        });
+
+        // Add at IDENTITY TRANSFORM so DecalGeometry works in raw model coords
+        // (raw model space == world space when cap is at identity)
+        scene.add(cap);
+        cap.updateMatrixWorld(true);
+
+        // ── DECALS ──────────────────────────────────────────────────────────
+        // Bounds: X[-18.63→+19.11] Y[-11.91→+16.18] Z[-18.89→+37.15]
+        // Brim +Z · Back -Z · maxDim=56.04
+        // DecalGeometry projects a texture box onto the mesh surface,
+        // making logos/text follow the 3D curvature of the cap.
+
+        const capMeshes = [];
+        cap.traverse(ch => {
+          if (ch.isMesh) { ch.updateMatrixWorld(true); capMeshes.push(ch); }
+        });
+
+        function addDecal(pos, euler, size, mat) {
+          capMeshes.forEach(mesh => {
+            try {
+              const geo = new DecalGeometry(mesh, pos, euler, size);
+              if (geo.attributes.position?.count > 0) {
+                const dm = new THREE.Mesh(geo, mat);
+                dm.renderOrder = 1;
+                cap.add(dm);
+              }
+            } catch(_) { /* mesh had no geometry in this projection volume */ }
+          });
+        }
+
+        // ── Parche — panel lateral-izquierdo
+        patchMat = new THREE.MeshStandardMaterial({
+          map: preloadedPatchTex || buildPatchTexture(),
+          transparent: true, depthTest: true, depthWrite: false,
+          roughness: 0.85, metalness: 0.0,
+          polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -6,
+        });
+        addDecal(
+          new THREE.Vector3(-16.0, 5.0, 7.0),
+          new THREE.Euler(0.0, -0.75, 0.10),
+          new THREE.Vector3(10.5, 7.0, 14),
+          patchMat
+        );
+
+        // ── Bordado trasero — panel posterior centrado
+        addDecal(
+          new THREE.Vector3(0.24, 3.5, -17.2),
+          new THREE.Euler(-0.05, Math.PI, 0),
+          new THREE.Vector3(18, 4, 12),
+          new THREE.MeshStandardMaterial({
+            map: buildBackTexture(), transparent: true, depthTest: true, depthWrite: false,
+            roughness: 0.88, metalness: 0.0,
+            polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -6,
+          })
+        );
+
+        // Apply initial scale/position — animation loop updates every frame
+        cap.scale.setScalar(capBaseScale);
+        cap.position.set(-center.x * capBaseScale, -center.y * capBaseScale, -center.z * capBaseScale);
+
+        shadowDirtyFrames = 4;
+        renderer.shadowMap.needsUpdate = true;
+
+        loaderText.textContent = 'Listo';
+        loaderFill.style.width = '100%';
+        setTimeout(() => loaderEl.classList.add('hidden'), 600);
+      },
+      (xhr) => {
+        if (xhr.total) {
+          const pct = Math.round(xhr.loaded / xhr.total * 100);
+          loaderFill.style.width = pct + '%';
+          loaderText.textContent = `Cargando modelo · ${pct}%`;
+        }
+      },
+      (err) => {
+        console.error('[NØRTHSTAR] Error cargando modelo:', err);
+        loaderText.textContent = 'Error al cargar modelo';
+      }
+    );
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SCROLL KEYFRAMES  (7 secciones)
+    // ─────────────────────────────────────────────────────────────────────────
+    const KF = [
+      // HERO — frontal, ligera inclinación
+      { s0: 0,    s1: 0.13, posX: 0, posY:  0,    rotX:  0.15, rotY:  0.10,          camZ: 2.40, scale: 1.69, cLight: 0 },
+      // LEFT — parche (lateral izquierdo)
+      { s0: 0.13, s1: 0.28, posX: 0, posY:  0,    rotX:  0.08, rotY: -0.85,           camZ: 2.00, scale: 1.89, cLight: 0 },
+      // BACK — centrado, cámara cerca para ver el bordado
+      { s0: 0.28, s1: 0.45, posX: 0, posY:  0,    rotX:  0.02, rotY: Math.PI,         camZ: 2.10, scale: 1.89, cLight: 0 },
+      // CLASP — cierre metálico
+      { s0: 0.45, s1: 0.58, posX: 0, posY: -0.20, rotX:  0.50, rotY: Math.PI * 1.10, camZ: 1.80, scale: 2.02, cLight: 5 },
+      // COLOR STUDIO — tres cuartos frontal, luz neutra para apreciar el color
+      { s0: 0.58, s1: 0.72, posX: 0, posY:  0.05, rotX:  0.12, rotY:  0.30,           camZ: 2.20, scale: 1.82, cLight: 0 },
+      // SPECS — vista tres cuartos superior
+      { s0: 0.72, s1: 0.86, posX: 0, posY:  0.10, rotX: -0.30, rotY:  0.40,           camZ: 2.60, scale: 1.56, cLight: 0 },
+      // CTA — hero angle diferente
+      { s0: 0.86, s1: 1.00, posX: 0, posY:  0,    rotX:  0.18, rotY: -0.38,           camZ: 2.30, scale: 1.76, cLight: 0 },
+    ];
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function smoothstep(a, b, t) {
+      const x = Math.max(0, Math.min(1, (t - a) / (b - a)));
+      return x * x * (3 - 2 * x);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SCROLL STATE
+    // ─────────────────────────────────────────────────────────────────────────
+    let scrollProgress = 0, targetScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - innerHeight;
+      targetScroll = h > 0 ? window.scrollY / h : 0;
+      document.getElementById('progress-bar').style.width = (targetScroll * 100) + '%';
+    }, { passive: true });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // DRAG-TO-ORBIT
+    // ─────────────────────────────────────────────────────────────────────────
+    let dragging = false, dx0 = 0, dy0 = 0;
+    let orbitX = 0, orbitY = 0, tOrbitX = 0, tOrbitY = 0;
+    const SENS  = 0.006;
+    const DECAY = 0.025;
+
+    canvas.addEventListener('pointerdown', e => { dragging = true; dx0 = e.clientX; dy0 = e.clientY; });
+    window.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      tOrbitX = (e.clientX - dx0) * SENS;
+      tOrbitY = (e.clientY - dy0) * SENS;
+    });
+    window.addEventListener('pointerup', () => { dragging = false; });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // INTERSECTION OBSERVER — text reveals
+    // ─────────────────────────────────────────────────────────────────────────
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+    // Trigger hero immediately after loader hides
+    setTimeout(() => {
+      document.querySelectorAll('.hero .fi').forEach(el => el.classList.add('visible'));
+    }, 800);
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // RESIZE
+    // ─────────────────────────────────────────────────────────────────────────
+    let resizeT;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(() => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+      }, 100);
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ANIMATION LOOP
+    // ─────────────────────────────────────────────────────────────────────────
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Smooth scroll
+      scrollProgress += (targetScroll - scrollProgress) * 0.06;
+
+      if (cap) {
+        // Find active keyframe pair
+        let cur = KF[0], nxt = KF[1], localT = 0;
+        for (let i = 0; i < KF.length; i++) {
+          if (scrollProgress >= KF[i].s0 && scrollProgress <= KF[i].s1) {
+            cur  = KF[i];
+            nxt  = KF[Math.min(i + 1, KF.length - 1)];
+            localT = smoothstep(cur.s0, cur.s1, scrollProgress);
+            break;
+          }
+          if (i === KF.length - 1) { cur = KF[i]; nxt = KF[i]; localT = 1; }
+        }
+
+        const posX  = lerp(cur.posX,  nxt.posX,  localT);
+        const posY  = lerp(cur.posY,  nxt.posY,  localT);
+        const rotX  = lerp(cur.rotX,  nxt.rotX,  localT);
+        const rotY  = lerp(cur.rotY,  nxt.rotY,  localT);
+        const camZ  = lerp(cur.camZ,  nxt.camZ,  localT);
+        const sc    = lerp(cur.scale, nxt.scale, localT);
+        const cl    = lerp(cur.cLight, nxt.cLight, localT);
+
+        // Orbit blending
+        if (dragging) {
+          orbitX += (tOrbitX - orbitX) * 0.12;
+          orbitY += (tOrbitY - orbitY) * 0.12;
+        } else {
+          orbitX  += (0 - orbitX)  * DECAY;
+          orbitY  += (0 - orbitY)  * DECAY;
+          tOrbitX += (0 - tOrbitX) * DECAY;
+          tOrbitY += (0 - tOrbitY) * DECAY;
+        }
+
+        // Idle breath — barely noticeable
+        const idle = Math.sin(Date.now() * 0.00028) * 0.035;
+
+        // Scale = normalized base × KF multiplier; position re-centered each frame
+        const actualScale = capBaseScale * sc;
+        cap.scale.setScalar(actualScale);
+        cap.position.x = posX - capLocalCenter.x * actualScale;
+        cap.position.y = posY - capLocalCenter.y * actualScale;
+        cap.position.z =      - capLocalCenter.z * actualScale;
+        cap.rotation.x = rotX + orbitY;
+        cap.rotation.y = rotY + idle + orbitX;
+
+        camera.position.z = camZ;
+        claspLight.intensity = cl;
+
+        // Shadow update — only when needed
+        if (shadowDirtyFrames > 0) {
+          renderer.shadowMap.needsUpdate = true;
+          shadowDirtyFrames--;
+        }
+        if (Math.abs(scrollProgress - targetScroll) > 0.0005) {
+          shadowDirtyFrames = 2;
+        }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // COLOR STUDIO — change cap fabric color from HTML onclick
+    // Only "stealth" is available in Drop I; locked options do nothing.
+    // ─────────────────────────────────────────────────────────────────────────
+    const CAP_COLORS = {
+      stealth: { hex: 0x080808, roughness: 1.00, metalness: 0.0, label: 'Stealth Black' },
+    };
+
+    window.setCapColor = (id) => {
+      const def = CAP_COLORS[id];
+      if (!def) return;
+      capFabricMaterials.forEach(mat => {
+        mat.color.setHex(def.hex);
+        mat.roughness  = def.roughness;
+        mat.metalness  = def.metalness;
+        mat.needsUpdate = true;
+      });
+      shadowDirtyFrames = 3;
+      renderer.shadowMap.needsUpdate = true;
+      document.querySelectorAll('[data-color]').forEach(el => {
+        el.classList.toggle('color-active', el.dataset.color === id);
+      });
+    };
+  </script>
+
+</body>
+</html>
