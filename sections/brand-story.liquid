@@ -1,0 +1,87 @@
+<div class="brand-section" id="brand-section">
+
+  <div class="brand-intro">
+    <div class="brand-tagline">Nacidos en<br>Barcelona.<br>Guiados<br>por el norte.</div>
+    <div class="brand-story">
+      <p>NØRTHSTAR nació de una idea simple: hacer una gorra que valga la pena. No una más de las que se venden en cualquier tienda. Una que dure, que signifique algo, que lleves porque quieres — no porque te la dieron.</p>
+      <p>Somos una marca independiente de Barcelona. Pequeña por elección, cuidadosa por principio. Cada pieza del Drop I ha pasado por manos que saben exactamente lo que están haciendo.</p>
+      <p>La estrella de cuatro puntos no es un logo de temporada. Es una referencia permanente: la del norte magnético, la que orienta. La llevamos porque creemos que siempre hay una dirección correcta.</p>
+    </div>
+  </div>
+
+  <div class="editorial-grid">
+    <div class="editorial-item ei-tall">
+      <img src="{{ 'photo-editorial-01.jpg' | asset_url }}" alt="Double the style. One North — Barcelona" style="object-position:center top">
+    </div>
+    <div class="editorial-item">
+      <img src="{{ 'photo-editorial-04.jpg' | asset_url }}" alt="Weekend in Paris — NØRTHSTAR" style="object-position:top center">
+    </div>
+    <div class="editorial-item">
+      <img src="{{ 'photo-editorial-02.jpg' | asset_url }}" alt="Diseñada en Barcelona — La Pedrera">
+    </div>
+    <div class="editorial-item">
+      <img src="{{ 'photo-editorial-05.jpg' | asset_url }}" alt="Golf afternoon Costa Brava — NØRTHSTAR">
+    </div>
+    <div class="editorial-item">
+      <img src="{{ 'photo-editorial-03.jpg' | asset_url }}" alt="El emblema — Designed in Barcelona">
+    </div>
+  </div>
+
+  <div class="brand-values">
+    <div class="brand-value">
+      <div class="bv-num">001</div>
+      <div class="bv-title">Calidad antes que cantidad</div>
+      <div class="bv-text">Hacemos una gorra. La hacemos bien. Sin atajos, sin materiales baratos, sin excusas.</div>
+    </div>
+    <div class="brand-value">
+      <div class="bv-num">002</div>
+      <div class="bv-title">Drop culture</div>
+      <div class="bv-text">Colecciones limitadas. Sin reposición. Si lo quieres, tienes que decidirte. Así funciona lo que vale.</div>
+    </div>
+    <div class="brand-value">
+      <div class="bv-num">003</div>
+      <div class="bv-title">Hecho para durar</div>
+      <div class="bv-text">No diseñamos para la temporada. Diseñamos para los próximos diez años. La gorra que llevas el primer día es la misma que llevarás el último.</div>
+    </div>
+  </div>
+
+  <div class="media-section">
+    <div class="media-header">
+      <span class="media-handle">@northstar.cap</span>
+      <span class="media-sep">—</span>
+      <span class="media-tagline">Comunidad · Drops · Behind the scenes</span>
+    </div>
+    <div class="media-grid">
+      <div class="media-item"><img src="{{ 'photo-feed-01.jpg' | asset_url }}" alt="Double the style. One North."></div>
+      <div class="media-item"><img src="{{ 'photo-feed-02.jpg' | asset_url }}" alt="Weekend in Paris"></div>
+      <div class="media-item"><img src="{{ 'photo-feed-03.jpg' | asset_url }}" alt="Golf afternoon in Costa Brava"></div>
+      <div class="media-item"><img src="{{ 'photo-feed-04.jpg' | asset_url }}" alt="Nørthstar Style"></div>
+    </div>
+    <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" class="ig-link">
+      Ver todo en Instagram →
+    </a>
+  </div>
+
+  <div class="brand-footer">
+    <div class="bf-logo">NØRTHSTAR</div>
+    <div class="bf-links">
+      <a href="{{ section.settings.instagram_url }}" target="_blank">Instagram</a>
+      <a href="mailto:{{ section.settings.email }}">Contacto</a>
+      <a href="{{ routes.root_url }}pages/envios">Envíos</a>
+      <a href="{{ routes.root_url }}policies/privacy-policy">Privacidad</a>
+    </div>
+    <div class="bf-copy">© {{ 'now' | date: '%Y' }} NØRTHSTAR BCN. Todos los derechos reservados.</div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "settings": [
+    { "type": "url",   "id": "instagram_url", "label": "Instagram URL",     "default": "https://www.instagram.com/northstar.cap/" },
+    { "type": "text",  "id": "email",          "label": "Email de contacto", "default": "hola@northstar.cap" }
+  ],
+  "presets": [{ "name": "Brand Story" }]
+}
+{% endschema %}

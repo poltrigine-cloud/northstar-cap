@@ -1,0 +1,484 @@
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-logo">NØRTHSTAR</div>
+  <div class="loader-bar-track"><div class="loader-bar-fill" id="loader-fill"></div></div>
+  <div class="loader-text" id="loader-text">Cargando modelo</div>
+</div>
+
+<div id="progress-bar"></div>
+
+<!-- Canvas — data-* passes Shopify asset URLs to JS -->
+<canvas id="cap-canvas"
+  data-glb-url="{{ 'cap.glb' | asset_url }}"
+  data-patch-url="{{ 'logo-patch.png' | asset_url }}">
+</canvas>
+
+<div class="scroll-container">
+
+  <!-- 01 HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge fi"><span class="badge-dot"></span>Drop I · 2026 · Barcelona</div>
+      <h1 class="fi d1">NØRTH<br>STAR</h1>
+      <p class="hero-sub fi d2">Stealth O1-Cap — Edición Limitada</p>
+      <p class="fi d2" style="font-size:13px;color:rgba(255,255,255,0.42);letter-spacing:0.06em;margin-bottom:36px;max-width:340px;line-height:1.7">Nació en Barcelona. Diseñada para los que saben a dónde van.</p>
+      <a href="{{ section.settings.product_url }}" class="hero-cta fi d3">
+        Conseguir · {{ section.settings.price }}
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+      </a>
+    </div>
+    <div class="scroll-hint fi d3"><span>Scroll</span><div class="sh-line"></div></div>
+  </section>
+
+  <!-- 02 EL EMBLEMA -->
+  <section class="info-left" id="section-patch">
+    <div class="text-block">
+      <span class="section-label fi">01 — El Emblema</span>
+      <h2 class="fi d1">El símbolo<br>que siempre<br>sabe dónde ir</h2>
+      <p class="fi d2">Antes de que existiera la gorra, existió el símbolo. Una rosa de los vientos reducida a su esencia: cuatro puntas, dos planos, una sola lectura. No hay manera de confundirla.</p>
+      <p class="fi d2" style="margin-top:16px">La bordamos a máquina, punto a punto, sobre una base de velcro negro de 4×4 cm. El resultado es un parche que no se despega, no se decolora y no pierde definición con el uso. Está en el panel lateral izquierdo porque ahí es donde se fija la mirada.</p>
+      <p class="fi d2" style="margin-top:16px">Lo hemos fotografiado en puertas de Barcelona, en rejas de hierro forjado, en el Passeig de Gràcia. Siempre queda bien. Eso es lo que hace un buen símbolo.</p>
+      <div class="feature-tags fi d3">
+        <span>Bordado máquina</span><span>Velcro backing 4×4 cm</span>
+        <span>Panel lateral izq.</span><span>Hilo blanco alta resistencia</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 LA FIRMA -->
+  <section class="info-right" id="section-back">
+    <div class="text-block">
+      <span class="section-label fi">02 — La Firma</span>
+      <h2 class="fi d1">Siete letras.<br>Sin excusas.<br>Para siempre.</h2>
+      <p class="fi d2">NØRTHSTAR. Lo bordamos en el panel trasero porque queremos que se vea cuando te vas. No cuando llegas.</p>
+      <p class="fi d2" style="margin-top:16px">Hilo de algodón mercerizado blanco roto, con un ligero relieve que hace que la luz lo trabaje a su favor. De cerca parece costura artesanal. Desde lejos parece una declaración. En ambos casos, tiene razón.</p>
+      <p class="fi d2" style="margin-top:16px">Llevamos meses viendo la gorra en el metro, en las ramblas, en Costa Brava, en París. Nadie pregunta qué es. Todo el mundo pregunta dónde conseguirla.</p>
+      <div class="feature-tags fi d3">
+        <span>Hilo blanco mercerizado</span><span>Panel trasero centrado</span>
+        <span>Relieve 3D</span><span>Permanente</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 EL METAL -->
+  <section class="info-left" id="section-clasp">
+    <div class="text-block">
+      <span class="section-label fi">03 — Hardware</span>
+      <h2 class="fi d1">Donde otros<br>ponen plástico,<br>nosotros ponemos metal.</h2>
+      <p class="fi d2">El cierre snapback es la parte que más se toca, la que más se ajusta, la que más castiga. Por eso lo hicimos en acero inoxidable. No en ABS. No en polipropileno. Metal.</p>
+      <p class="fi d2" style="margin-top:16px">Cinco posiciones. Cada una con un clic definido. Sin juego lateral, sin holgura. El ajuste que eliges se queda donde lo pones.</p>
+      <p class="fi d2" style="margin-top:16px">No es el detalle más visible de la gorra. Pero es el que notarás cada vez que te la pongas y cada vez que te la quites. Y cuando algo se nota sin verse, es que está bien hecho.</p>
+      <div class="feature-tags fi d3">
+        <span>Acero inoxidable</span><span>5 posiciones · Clic firme</span>
+        <span>Sin plástico</span><span>Cepillado mate</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 COLOR STUDIO -->
+  <section class="color-studio" id="section-color">
+    <div class="cs-inner">
+      <span class="section-label fi">04 — Color Studio</span>
+      <h2 class="fi d1">Elige tu<br>versión</h2>
+      <p class="fi d2" style="font-size:15px;line-height:1.8;color:rgba(255,255,255,0.5);margin-bottom:0">El color es una decisión de carácter. El Drop I llega en un único tono: Stealth Black. Más versiones en el Drop II.</p>
+      <div class="color-selector fi d3">
+        <div class="color-option color-active" data-color="stealth" onclick="setCapColor('stealth')">
+          <div class="color-dot" style="background:#0d0d0d;box-shadow:0 0 0 1px rgba(255,255,255,0.18)"></div>
+          <div><div class="color-title">Stealth Black</div><div class="color-avail">Disponible · Drop I · 49€</div></div>
+          <div class="color-check">✓ Seleccionado</div>
+        </div>
+        <div class="color-option color-locked" data-color="sand">
+          <div class="color-dot" style="background:#8b7355"></div>
+          <div><div class="color-title">Desert Sand</div><div class="color-avail">Drop II · Próximamente</div></div>
+          <div class="color-lock">—</div>
+        </div>
+        <div class="color-option color-locked" data-color="olive">
+          <div class="color-dot" style="background:#3b3d2e"></div>
+          <div><div class="color-title">Olive Dark</div><div class="color-avail">Drop II · Próximamente</div></div>
+          <div class="color-lock">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 ESPECIFICACIONES -->
+  <section class="specs-section" id="section-specs">
+    <p class="specs-label fi">05 — Especificaciones Técnicas</p>
+    <div class="specs-full fi d1">
+      <div class="spec-row"><span class="spec-key">Construcción</span><span class="spec-val">6 paneles · Costura estructurada</span></div>
+      <div class="spec-row"><span class="spec-key">Material</span><span class="spec-val">100% algodón peinado 320 g/m²</span></div>
+      <div class="spec-row"><span class="spec-key">Visera</span><span class="spec-val">Pre-curvada · Perfil medio</span></div>
+      <div class="spec-row"><span class="spec-key">Talla</span><span class="spec-val">Única · Ajustable 54–60 cm</span></div>
+      <div class="spec-row"><span class="spec-key">Emblema</span><span class="spec-val">Parche bordado · Base velcro · Panel izq.</span></div>
+      <div class="spec-row"><span class="spec-key">Firma trasera</span><span class="spec-val">Bordado hilo blanco · Panel posterior</span></div>
+      <div class="spec-row"><span class="spec-key">Cierre</span><span class="spec-val">Snapback acero inoxidable · 5 posiciones</span></div>
+      <div class="spec-row"><span class="spec-key">Interior</span><span class="spec-val">Cinta de confort en suede negro</span></div>
+      <div class="spec-row"><span class="spec-key">Lavado</span><span class="spec-val">A mano · 30 °C máximo · Sin secadora</span></div>
+      <div class="spec-row"><span class="spec-key">Origen</span><span class="spec-val">Diseñada en Barcelona · Fabricada en Europa</span></div>
+      <div class="spec-row highlight"><span class="spec-key">Edición</span><span class="spec-val">Drop I · 2026 · Stock limitado</span></div>
+    </div>
+  </section>
+
+  <!-- 07 CTA -->
+  <section class="cta-section" id="section-cta">
+    <p class="cta-pre fi">Drop I · Barcelona · 2026</p>
+    <h2 class="fi d1">Find Your<br>North</h2>
+    <div class="cta-price fi d1">{{ section.settings.price }}</div>
+    <a href="{{ section.settings.product_url }}" class="cta-btn fi d2">Conseguir la Gorra</a>
+    <p class="cta-note fi d3">Envío en 48h · Devolución gratuita · Pago seguro</p>
+  </section>
+
+  <footer class="scroll-footer">
+    <div class="footer-logo">NØRTHSTAR</div>
+    <div class="footer-tagline">Find Your North</div>
+    <div class="footer-copy">© 2026 NØRTHSTAR BCN</div>
+  </footer>
+
+</div><!-- /scroll-container -->
+
+<script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader }    from 'three/addons/loaders/GLTFLoader.js';
+  import { DRACOLoader }   from 'three/addons/loaders/DRACOLoader.js';
+  import { RGBELoader }    from 'three/addons/loaders/RGBELoader.js';
+  import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+
+  // Asset URLs injected by Shopify via data-* attributes
+  const canvasEl  = document.getElementById('cap-canvas');
+  const glbUrl    = canvasEl.dataset.glbUrl;
+  const patchUrl  = canvasEl.dataset.patchUrl;
+
+  // ── RENDERER ───────────────────────────────────────────────
+  const renderer = new THREE.WebGLRenderer({ canvas: canvasEl, antialias: true, alpha: false });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.78;
+  renderer.setClearColor(0x0d0b0a, 1);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.autoUpdate = false;
+
+  // ── SCENE + CAMERA ─────────────────────────────────────────
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 3);
+
+  // ── LIGHTS ─────────────────────────────────────────────────
+  scene.add(new THREE.AmbientLight(0xffffff, 0.18));
+  const keyLight = new THREE.DirectionalLight(0xfff8f0, 3.0);
+  keyLight.position.set(5, 10, 5);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.set(2048, 2048);
+  keyLight.shadow.camera.near = 0.5;
+  keyLight.shadow.camera.far  = 30;
+  keyLight.shadow.bias = -0.0005;
+  scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xbcccff, 0.65);
+  fillLight.position.set(-6, 1, 4);
+  scene.add(fillLight);
+  const frontLight = new THREE.DirectionalLight(0xdce8ff, 0.30);
+  frontLight.position.set(0, -1, 8);
+  scene.add(frontLight);
+  const rimLight = new THREE.DirectionalLight(0xffffff, 3.8);
+  rimLight.position.set(0, 3, -7);
+  scene.add(rimLight);
+  const underLight = new THREE.DirectionalLight(0x7080a0, 0.28);
+  underLight.position.set(0, -5, 2);
+  scene.add(underLight);
+  const claspLight = new THREE.PointLight(0xfff0d0, 0, 6);
+  claspLight.position.set(0.2, -0.6, 1.5);
+  scene.add(claspLight);
+
+  // ── HDR ENVIRONMENT ────────────────────────────────────────
+  new RGBELoader().load(
+    'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr',
+    (tex) => {
+      tex.mapping = THREE.EquirectangularReflectionMapping;
+      scene.environment = tex;
+      scene.environmentIntensity = 0.35;
+    }
+  );
+
+  // ── FABRIC TEXTURES ────────────────────────────────────────
+  function buildFabricAlbedo() {
+    const S = 512, c = document.createElement('canvas');
+    c.width = c.height = S;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#111111'; ctx.fillRect(0,0,S,S);
+    const step = 9;
+    for (let i = -S; i < S*2; i += step) {
+      ctx.strokeStyle='rgba(6,6,6,0.95)'; ctx.lineWidth=step*0.52;
+      ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+S,S); ctx.stroke();
+      ctx.strokeStyle='rgba(26,26,24,0.90)'; ctx.lineWidth=step*0.44;
+      ctx.beginPath(); ctx.moveTo(i+step*0.55,0); ctx.lineTo(i+step*0.55+S,S); ctx.stroke();
+    }
+    for (let j = -S; j < S*2; j += step*2) {
+      ctx.strokeStyle='rgba(18,18,16,0.30)'; ctx.lineWidth=step*0.20;
+      ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(S,j+S); ctx.stroke();
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(16,16);
+    return tex;
+  }
+
+  function buildFabricNormal() {
+    const S = 256, c = document.createElement('canvas');
+    c.width = c.height = S;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle='rgb(128,128,255)'; ctx.fillRect(0,0,S,S);
+    const step = 6;
+    for (let i = -S; i < S*2; i += step) {
+      const bright = Math.floor(i/step)%2===0;
+      ctx.strokeStyle = bright ? 'rgba(155,155,255,0.55)' : 'rgba(98,98,255,0.50)';
+      ctx.lineWidth=step*0.48; ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i+S,S); ctx.stroke();
+    }
+    for (let y = 0; y < S; y += step) {
+      ctx.strokeStyle='rgba(115,115,255,0.22)'; ctx.lineWidth=step*0.30;
+      ctx.beginPath(); ctx.moveTo(0,y+step*0.5); ctx.lineTo(S,y+step*0.5); ctx.stroke();
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(16,16);
+    return tex;
+  }
+
+  const fabricNormal = buildFabricNormal();
+
+  function buildPatchTexture() {
+    const W=512, H=340, c=document.createElement('canvas');
+    c.width=W; c.height=H;
+    const ctx=c.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#080808'; ctx.beginPath(); ctx.roundRect(0,0,W,H,8); ctx.fill();
+    ctx.save(); ctx.strokeStyle='rgba(140,140,140,0.45)'; ctx.lineWidth=2;
+    ctx.setLineDash([5,4]); ctx.strokeRect(11,11,W-22,H-22); ctx.setLineDash([]); ctx.restore();
+    const cx=W/2, cy=H/2, outerR=110, baseR=22, bladeW=17, gapH=5;
+    for (let a=0; a<4; a++) {
+      const ang=(a*Math.PI/2)-Math.PI/2, cos=Math.cos(ang), sin=Math.sin(ang);
+      const pc=Math.cos(ang+Math.PI/2), ps=Math.sin(ang+Math.PI/2);
+      const tipX=cx+cos*outerR, tipY=cy+sin*outerR;
+      for (const side of [-1,1]) {
+        const ix=cx+cos*baseR+pc*side*gapH, iy=cy+sin*baseR+ps*side*gapH;
+        const ox=cx+cos*baseR+pc*side*(gapH+bladeW), oy=cy+sin*baseR+ps*side*(gapH+bladeW);
+        ctx.beginPath(); ctx.moveTo(tipX,tipY); ctx.lineTo(ix,iy); ctx.lineTo(ox,oy); ctx.closePath();
+        const grad=ctx.createLinearGradient(tipX,tipY,ox,oy);
+        grad.addColorStop(0,'rgba(255,255,255,0.95)'); grad.addColorStop(0.3,'rgba(200,200,200,0.9)'); grad.addColorStop(1,'rgba(65,65,65,0.85)');
+        ctx.fillStyle=grad; ctx.fill();
+        ctx.strokeStyle='rgba(255,255,255,0.92)'; ctx.lineWidth=2.5;
+        ctx.beginPath(); ctx.moveTo(tipX,tipY); ctx.lineTo(ix,iy); ctx.stroke();
+      }
+    }
+    ctx.beginPath(); const cv=14;
+    ctx.moveTo(cx,cy-cv); ctx.lineTo(cx+cv,cy); ctx.lineTo(cx,cy+cv); ctx.lineTo(cx-cv,cy);
+    ctx.closePath(); ctx.fillStyle='#030303'; ctx.fill();
+    return new THREE.CanvasTexture(c);
+  }
+
+  function buildBackTexture() {
+    const W=1024, H=220, c=document.createElement('canvas');
+    c.width=W; c.height=H;
+    const ctx=c.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    const text='NØRTHSTAR', cx=W/2, cy=H/2+10;
+    ctx.font='bold 102px "Space Grotesk","Arial Black",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(0,0,0,0.80)';        ctx.fillText(text,cx+3,cy+4);
+    ctx.fillStyle='rgba(55,53,47,0.95)';     ctx.fillText(text,cx+1.5,cy+2);
+    ctx.fillStyle='rgba(190,188,178,1.0)';   ctx.fillText(text,cx+0.5,cy+0.5);
+    ctx.fillStyle='rgba(242,240,232,1.0)';   ctx.fillText(text,cx,cy);
+    ctx.fillStyle='rgba(255,255,255,0.50)';  ctx.fillText(text,cx-0.5,cy-1);
+    ctx.globalCompositeOperation='source-atop';
+    for (let y=0; y<H; y+=3) {
+      const shade=y%6<3?170:210;
+      ctx.strokeStyle=`rgba(${shade},${shade},${Math.floor(shade*0.93)},0.65)`;
+      ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(0,y+1.5); ctx.lineTo(W,y+1.5); ctx.stroke();
+    }
+    ctx.globalCompositeOperation='source-over';
+    return new THREE.CanvasTexture(c);
+  }
+
+  // ── MODEL LOADING ──────────────────────────────────────────
+  let cap=null, capBaseScale=1, capLocalCenter=new THREE.Vector3();
+  let shadowDirtyFrames=0, capFabricMaterials=[];
+  const loaderFill=document.getElementById('loader-fill');
+  const loaderText=document.getElementById('loader-text');
+  const loaderEl  =document.getElementById('loader');
+
+  const draco = new DRACOLoader();
+  draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.setDRACOLoader(draco);
+
+  let patchMat=null, preloadedPatchTex=null;
+  const _patchImg = new Image();
+  _patchImg.onload = () => {
+    const c=document.createElement('canvas');
+    c.width=_patchImg.width; c.height=_patchImg.height;
+    const ctx=c.getContext('2d');
+    ctx.drawImage(_patchImg,0,0);
+    const id=ctx.getImageData(0,0,c.width,c.height), d=id.data;
+    const bgR=d[0], bgG=d[1], bgB=d[2];
+    for (let i=0; i<d.length; i+=4) {
+      const dist=Math.abs(d[i]-bgR)+Math.abs(d[i+1]-bgG)+Math.abs(d[i+2]-bgB);
+      if (dist<70) d[i+3]=0; else if (dist<120) d[i+3]=Math.round((dist-70)/50*255);
+    }
+    ctx.putImageData(id,0,0);
+    preloadedPatchTex=new THREE.CanvasTexture(c);
+    preloadedPatchTex.colorSpace=THREE.SRGBColorSpace;
+    if (patchMat) { patchMat.map=preloadedPatchTex; patchMat.needsUpdate=true; }
+  };
+  _patchImg.src = patchUrl;
+
+  gltfLoader.load(glbUrl,
+    (gltf) => {
+      cap = gltf.scene;
+      cap.traverse(ch => { if (ch.name==='Cap'||ch.name==='Cap__0') ch.visible=false; });
+      const box=new THREE.Box3().setFromObject(cap);
+      const size=box.getSize(new THREE.Vector3()), center=box.getCenter(new THREE.Vector3());
+      const maxDim=Math.max(size.x,size.y,size.z);
+      capBaseScale=1.0/maxDim; capLocalCenter.copy(center);
+      capFabricMaterials=[];
+      cap.traverse(ch => {
+        if (!ch.isMesh) return;
+        ch.castShadow=true; ch.receiveShadow=true;
+        const orig=Array.isArray(ch.material)?ch.material[0]:ch.material;
+        ch.material=new THREE.MeshStandardMaterial({
+          color:0x080808, map:orig.map||null,
+          normalMap:orig.normalMap||fabricNormal,
+          normalScale:orig.normalMap?new THREE.Vector2(0.8,0.8):new THREE.Vector2(1.2,1.2),
+          roughnessMap:orig.roughnessMap||null, roughness:1.0, metalness:0.0, envMapIntensity:0.12,
+        });
+        capFabricMaterials.push(ch.material);
+      });
+      scene.add(cap); cap.updateMatrixWorld(true);
+      const capMeshes=[];
+      cap.traverse(ch => { if (ch.isMesh) { ch.updateMatrixWorld(true); capMeshes.push(ch); } });
+      function addDecal(pos,euler,size,mat) {
+        capMeshes.forEach(mesh => {
+          try {
+            const geo=new DecalGeometry(mesh,pos,euler,size);
+            if (geo.attributes.position?.count>0) { const dm=new THREE.Mesh(geo,mat); dm.renderOrder=1; cap.add(dm); }
+          } catch(_) {}
+        });
+      }
+      patchMat=new THREE.MeshStandardMaterial({
+        map:preloadedPatchTex||buildPatchTexture(), transparent:true, depthTest:true, depthWrite:false,
+        roughness:0.85, metalness:0.0, polygonOffset:true, polygonOffsetFactor:-1, polygonOffsetUnits:-6,
+      });
+      addDecal(new THREE.Vector3(-16.0,5.0,7.0), new THREE.Euler(0.0,-0.75,0.10), new THREE.Vector3(10.5,7.0,14), patchMat);
+      addDecal(new THREE.Vector3(0.24,3.5,-17.2), new THREE.Euler(-0.05,Math.PI,0), new THREE.Vector3(18,4,12),
+        new THREE.MeshStandardMaterial({ map:buildBackTexture(), transparent:true, depthTest:true, depthWrite:false, roughness:0.88, metalness:0.0, polygonOffset:true, polygonOffsetFactor:-1, polygonOffsetUnits:-6 })
+      );
+      cap.scale.setScalar(capBaseScale);
+      cap.position.set(-center.x*capBaseScale,-center.y*capBaseScale,-center.z*capBaseScale);
+      shadowDirtyFrames=4; renderer.shadowMap.needsUpdate=true;
+      loaderText.textContent='Listo'; loaderFill.style.width='100%';
+      setTimeout(()=>loaderEl.classList.add('hidden'),600);
+    },
+    (xhr) => {
+      if (xhr.total) {
+        const pct=Math.round(xhr.loaded/xhr.total*100);
+        loaderFill.style.width=pct+'%'; loaderText.textContent=`Cargando · ${pct}%`;
+      }
+    },
+    (err) => { console.error('[NØRTHSTAR] Error cargando modelo:',err); loaderText.textContent='Error al cargar'; }
+  );
+
+  // ── SCROLL KEYFRAMES ───────────────────────────────────────
+  const KF = [
+    { s0:0,    s1:0.13, posX:0, posY:0,     rotX:0.15,  rotY:0.10,          camZ:2.40, scale:1.69, cLight:0 },
+    { s0:0.13, s1:0.28, posX:0, posY:0,     rotX:0.08,  rotY:-0.85,         camZ:2.00, scale:1.89, cLight:0 },
+    { s0:0.28, s1:0.45, posX:0, posY:0,     rotX:0.02,  rotY:Math.PI,       camZ:2.10, scale:1.89, cLight:0 },
+    { s0:0.45, s1:0.58, posX:0, posY:-0.20, rotX:0.50,  rotY:Math.PI*1.10, camZ:1.80, scale:2.02, cLight:5 },
+    { s0:0.58, s1:0.72, posX:0, posY:0.05,  rotX:0.12,  rotY:0.30,          camZ:2.20, scale:1.82, cLight:0 },
+    { s0:0.72, s1:0.86, posX:0, posY:0.10,  rotX:-0.30, rotY:0.40,          camZ:2.60, scale:1.56, cLight:0 },
+    { s0:0.86, s1:1.00, posX:0, posY:0,     rotX:0.18,  rotY:-0.38,         camZ:2.30, scale:1.76, cLight:0 },
+  ];
+
+  function lerp(a,b,t) { return a+(b-a)*t; }
+  function smoothstep(a,b,t) { const x=Math.max(0,Math.min(1,(t-a)/(b-a))); return x*x*(3-2*x); }
+
+  let scrollProgress=0, targetScroll=0;
+  window.addEventListener('scroll', () => {
+    const h=document.documentElement.scrollHeight-innerHeight;
+    targetScroll=h>0?window.scrollY/h:0;
+    document.getElementById('progress-bar').style.width=(targetScroll*100)+'%';
+  }, { passive:true });
+
+  let dragging=false, dx0=0, dy0=0, orbitX=0, orbitY=0, tOrbitX=0, tOrbitY=0;
+  const SENS=0.006, DECAY=0.025;
+  canvasEl.addEventListener('pointerdown', e=>{dragging=true;dx0=e.clientX;dy0=e.clientY;});
+  window.addEventListener('pointermove',  e=>{if(!dragging)return;tOrbitX=(e.clientX-dx0)*SENS;tOrbitY=(e.clientY-dy0)*SENS;});
+  window.addEventListener('pointerup',    ()=>{dragging=false;});
+
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+  },{threshold:0.15});
+  document.querySelectorAll('.fi').forEach(el=>io.observe(el));
+  setTimeout(()=>{ document.querySelectorAll('.hero .fi').forEach(el=>el.classList.add('visible')); },800);
+
+  let resizeT;
+  window.addEventListener('resize', ()=>{
+    clearTimeout(resizeT); resizeT=setTimeout(()=>{
+      camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth,innerHeight);
+    },100);
+  });
+
+  // ── ANIMATION LOOP ─────────────────────────────────────────
+  function animate() {
+    requestAnimationFrame(animate);
+    scrollProgress+=(targetScroll-scrollProgress)*0.06;
+    if (cap) {
+      let cur=KF[0], nxt=KF[1], localT=0;
+      for (let i=0; i<KF.length; i++) {
+        if (scrollProgress>=KF[i].s0&&scrollProgress<=KF[i].s1) {
+          cur=KF[i]; nxt=KF[Math.min(i+1,KF.length-1)];
+          localT=smoothstep(cur.s0,cur.s1,scrollProgress); break;
+        }
+        if (i===KF.length-1) { cur=KF[i]; nxt=KF[i]; localT=1; }
+      }
+      const posX=lerp(cur.posX,nxt.posX,localT), posY=lerp(cur.posY,nxt.posY,localT);
+      const rotX=lerp(cur.rotX,nxt.rotX,localT), rotY=lerp(cur.rotY,nxt.rotY,localT);
+      const camZ=lerp(cur.camZ,nxt.camZ,localT), sc=lerp(cur.scale,nxt.scale,localT);
+      const cl  =lerp(cur.cLight,nxt.cLight,localT);
+      if (dragging) { orbitX+=(tOrbitX-orbitX)*0.12; orbitY+=(tOrbitY-orbitY)*0.12; }
+      else {
+        orbitX+=(0-orbitX)*DECAY; orbitY+=(0-orbitY)*DECAY;
+        tOrbitX+=(0-tOrbitX)*DECAY; tOrbitY+=(0-tOrbitY)*DECAY;
+      }
+      const idle=Math.sin(Date.now()*0.00028)*0.035;
+      const actualScale=capBaseScale*sc;
+      cap.scale.setScalar(actualScale);
+      cap.position.x=posX-capLocalCenter.x*actualScale;
+      cap.position.y=posY-capLocalCenter.y*actualScale;
+      cap.position.z=    -capLocalCenter.z*actualScale;
+      cap.rotation.x=rotX+orbitY; cap.rotation.y=rotY+idle+orbitX;
+      camera.position.z=camZ; claspLight.intensity=cl;
+      if (shadowDirtyFrames>0) { renderer.shadowMap.needsUpdate=true; shadowDirtyFrames--; }
+      if (Math.abs(scrollProgress-targetScroll)>0.0005) shadowDirtyFrames=2;
+    }
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  // ── COLOR STUDIO ───────────────────────────────────────────
+  const CAP_COLORS = { stealth:{ hex:0x080808, roughness:1.00, metalness:0.0 } };
+  window.setCapColor = (id) => {
+    const def=CAP_COLORS[id]; if (!def) return;
+    capFabricMaterials.forEach(mat => { mat.color.setHex(def.hex); mat.roughness=def.roughness; mat.metalness=def.metalness; mat.needsUpdate=true; });
+    shadowDirtyFrames=3; renderer.shadowMap.needsUpdate=true;
+    document.querySelectorAll('[data-color]').forEach(el=>el.classList.toggle('color-active',el.dataset.color===id));
+  };
+</script>
+
+{% schema %}
+{
+  "name": "3D Hero",
+  "settings": [
+    { "type": "text", "id": "price",       "label": "Precio",          "default": "49€" },
+    { "type": "url",  "id": "product_url", "label": "URL del producto", "default": "/products/northstar-stealth-cap" }
+  ],
+  "presets": [{ "name": "3D Hero cinematic" }]
+}
+{% endschema %}

@@ -1,0 +1,79 @@
+<div class="product-page">
+
+  <!-- Gallery -->
+  <div class="product-gallery">
+    {%- if product.featured_image -%}
+      <img src="{{ product.featured_image | image_url: width: 900 }}"
+           alt="{{ product.featured_image.alt | escape }}"
+           id="product-main-img" loading="eager">
+    {%- else -%}
+      <div style="width:100%;aspect-ratio:1;background:#111;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:10px;letter-spacing:0.2em;color:rgba(255,255,255,0.2);text-transform:uppercase">Sin imagen</span>
+      </div>
+    {%- endif -%}
+
+    {%- if product.images.size > 1 -%}
+    <div class="product-gallery-thumbs">
+      {%- for image in product.images limit: 4 -%}
+        <img src="{{ image | image_url: width: 300 }}"
+             alt="{{ image.alt | escape }}"
+             onclick="document.getElementById('product-main-img').src='{{ image | image_url: width: 900 }}'">
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+  </div>
+
+  <!-- Info -->
+  <div class="product-info">
+    <div class="product-badge">Drop I · Edición Limitada · 2026</div>
+    <h1 class="product-title">{{ product.title }}</h1>
+
+    <div class="product-price">
+      {{ product.selected_or_first_available_variant.price | money }}
+    </div>
+
+    <div class="product-description">
+      {{ product.description }}
+    </div>
+
+    <!-- Specs quick view -->
+    <div class="specs-full" style="margin-bottom:36px">
+      <div class="spec-row"><span class="spec-key">Material</span><span class="spec-val">100% algodón peinado 320 g/m²</span></div>
+      <div class="spec-row"><span class="spec-key">Talla</span><span class="spec-val">Única · Ajustable 54–60 cm</span></div>
+      <div class="spec-row"><span class="spec-key">Cierre</span><span class="spec-val">Snapback acero inoxidable</span></div>
+      <div class="spec-row highlight"><span class="spec-key">Edición</span><span class="spec-val">Stock limitado · Sin reposición</span></div>
+    </div>
+
+    <!-- Add to cart -->
+    {%- form 'product', product -%}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit" class="product-form-btn"
+        {%- unless product.available -%} disabled {%- endunless -%}>
+        {%- if product.available -%}
+          Añadir al carrito — {{ product.selected_or_first_available_variant.price | money }}
+        {%- else -%}
+          Agotado
+        {%- endif -%}
+      </button>
+    {%- endform -%}
+
+    <p class="product-shipping-note">Envío en 48h · Devolución gratuita · Pago seguro</p>
+
+    <!-- Feature tags -->
+    <div class="feature-tags" style="margin-top:32px">
+      <span>Bordado máquina</span>
+      <span>Velcro backing 4×4 cm</span>
+      <span>Acero inoxidable</span>
+      <span>Diseñada en Barcelona</span>
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": [],
+  "presets": [{ "name": "Product Main" }]
+}
+{% endschema %}

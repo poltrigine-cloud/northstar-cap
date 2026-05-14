@@ -1,0 +1,47 @@
+<div class="collection-header">
+  <h1>{{ collection.title }}</h1>
+  {%- if collection.description != blank -%}
+    <p>{{ collection.description }}</p>
+  {%- else -%}
+    <p>Colecciones limitadas. Sin reposición. Diseñadas en Barcelona.</p>
+  {%- endif -%}
+</div>
+
+<div class="collection-grid">
+  {%- for product in collection.products -%}
+    <div class="product-card">
+      <a href="{{ product.url }}" style="text-decoration:none;color:inherit;display:block">
+        <div class="product-card-img-wrap">
+          {%- if product.featured_image -%}
+            <img class="product-card-img"
+                 src="{{ product.featured_image | image_url: width: 600 }}"
+                 alt="{{ product.featured_image.alt | escape }}" loading="lazy">
+          {%- else -%}
+            <div class="product-card-img" style="display:flex;align-items:center;justify-content:center;background:#111">
+              <span style="font-size:9px;letter-spacing:0.2em;color:rgba(255,255,255,0.2);text-transform:uppercase">NØRTHSTAR</span>
+            </div>
+          {%- endif -%}
+        </div>
+        {%- unless product.available -%}
+          <div class="product-card-badge">Agotado</div>
+        {%- else -%}
+          <div class="product-card-badge">Drop I</div>
+        {%- endunless -%}
+        <div class="product-card-info">
+          <div class="product-card-name">{{ product.title }}</div>
+          <div class="product-card-price">{{ product.price | money }}</div>
+        </div>
+      </a>
+    </div>
+  {%- else -%}
+    <p style="color:var(--muted);font-size:14px;padding:40px 0">No hay productos disponibles.</p>
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "Collection Main",
+  "settings": [],
+  "presets": [{ "name": "Collection Main" }]
+}
+{% endschema %}

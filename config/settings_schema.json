@@ -1,0 +1,79 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "NØRTHSTAR",
+    "theme_version": "1.0.0",
+    "theme_author": "NØRTHSTAR BCN",
+    "theme_documentation_url": "https://github.com/poltrigine-cloud/northstar-cap",
+    "theme_support_url": "mailto:hola@northstar.cap"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#0d0b0a"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent",
+        "default": "#c8c8c8"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_display",
+        "label": "Display font",
+        "default": "space_grotesk_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body font",
+        "default": "inter_n4"
+      }
+    ]
+  },
+  {
+    "name": "Marca",
+    "settings": [
+      {
+        "type": "text",
+        "id": "brand_name",
+        "label": "Nombre de marca",
+        "default": "NØRTHSTAR"
+      },
+      {
+        "type": "text",
+        "id": "brand_tagline",
+        "label": "Tagline",
+        "default": "Find Your North"
+      },
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "Email de contacto",
+        "default": "hola@northstar.cap"
+      },
+      {
+        "type": "text",
+        "id": "instagram_handle",
+        "label": "Handle de Instagram",
+        "default": "@northstar.cap"
+      }
+    ]
+  }
+]

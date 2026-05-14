@@ -1,0 +1,15 @@
+{%- if section.settings.show_bar -%}
+<div class="announcement-bar">
+  {{ section.settings.text }}
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    { "type": "checkbox", "id": "show_bar",  "label": "Mostrar barra", "default": true },
+    { "type": "text",     "id": "text",       "label": "Texto", "default": "Drop I · Edición Limitada · 49€ · Envío 48h" }
+  ]
+}
+{% endschema %}

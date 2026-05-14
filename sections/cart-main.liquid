@@ -1,0 +1,51 @@
+<div class="cart-page">
+  <h1>Carrito</h1>
+
+  {%- if cart.item_count > 0 -%}
+    {%- form 'cart', cart -%}
+      {%- for item in cart.items -%}
+        <div class="cart-item">
+          {%- if item.image -%}
+            <img class="cart-item-img"
+                 src="{{ item.image | image_url: width: 200 }}"
+                 alt="{{ item.image.alt | escape }}">
+          {%- endif -%}
+          <div class="cart-item-info">
+            <div class="cart-item-name">{{ item.product.title }}</div>
+            <div class="cart-item-price">{{ item.final_line_price | money }}</div>
+            <a href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0" class="cart-item-remove">
+              Eliminar
+            </a>
+          </div>
+        </div>
+      {%- endfor -%}
+
+      <div class="cart-summary">
+        <div class="cart-total">
+          <span>Total</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+        <button type="submit" name="checkout" class="cart-checkout-btn">
+          Finalizar compra
+        </button>
+        <p class="product-shipping-note" style="margin-top:8px">Envío en 48h · Pago seguro</p>
+      </div>
+    {%- endform -%}
+
+  {%- else -%}
+    <div class="cart-empty">
+      <p>Tu carrito está vacío.</p>
+      <a href="{{ routes.all_products_collection_url }}" class="cart-continue">
+        Ver la colección →
+      </a>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [],
+  "presets": [{ "name": "Cart" }]
+}
+{% endschema %}

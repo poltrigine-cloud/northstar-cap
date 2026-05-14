@@ -1,0 +1,27 @@
+<nav>
+  <a href="{{ routes.root_url }}" class="nav-logo">NØRTHSTAR</a>
+
+  <div class="nav-links">
+    <a href="#section-patch">Emblema</a>
+    <a href="#section-back">La Firma</a>
+    <a href="#section-color">Color</a>
+    <a href="{{ routes.collections_url }}">Tienda</a>
+  </div>
+
+  <a href="{{ routes.cart_url }}" class="nav-cta">
+    {%- if cart.item_count > 0 -%}
+      Carrito · {{ cart.item_count }}
+    {%- else -%}
+      {{ section.settings.cta_text }}
+    {%- endif -%}
+  </a>
+</nav>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "text", "id": "cta_text", "label": "Texto CTA", "default": "Comprar · 49€" }
+  ]
+}
+{% endschema %}

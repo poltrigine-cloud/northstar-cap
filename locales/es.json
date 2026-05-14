@@ -1,0 +1,20 @@
+{
+  "general": {
+    "cart": {
+      "title": "Carrito",
+      "empty": "Tu carrito está vacío",
+      "checkout": "Finalizar compra",
+      "continue": "Seguir comprando",
+      "item_count": { "one": "{{ count }} artículo", "other": "{{ count }} artículos" }
+    },
+    "search": { "placeholder": "Buscar...", "title": "Búsqueda" },
+    "pagination": { "previous": "Anterior", "next": "Siguiente" }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Añadir al carrito",
+      "sold_out": "Agotado",
+      "unavailable": "No disponible"
+    }
+  }
+}
