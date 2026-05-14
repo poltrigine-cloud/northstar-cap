@@ -1,0 +1,14 @@
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center">
+  <p style="font-size:10px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:24px">404</p>
+  <h1 style="font-family:var(--f-display);font-size:clamp(48px,8vw,96px);font-weight:700;line-height:0.88;letter-spacing:-0.03em;margin-bottom:28px">Not<br>Found</h1>
+  <p style="font-size:14px;color:rgba(255,255,255,0.45);max-width:320px;line-height:1.7;margin-bottom:40px">La página que buscas no existe o ha sido movida.</p>
+  <a href="{{ routes.root_url }}" style="font-family:var(--f-display);font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#000;background:#fff;padding:14px 36px;text-decoration:none">← Volver al inicio</a>
+</div>
+
+{% schema %}
+{
+  "name": "Not Found",
+  "settings": [],
+  "presets": [{ "name": "Not Found" }]
+}
+{% endschema %}
